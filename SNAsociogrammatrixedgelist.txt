@@ -1,0 +1,57 @@
+1) a network as a sociogram (or “network graph”)
+>library(igraph)
+> ng<-graph.formula(Andy++Garth,Garth-+Bill,Bill-+Elena,Elena++Frank,Carol-+Andy,Carol-
++Elena,Carol++Dan,Carol++Bill,Dan++Andy,Dan++Bill)
+>plot(ng)
+2) a network as a matrix,
+>get.adjacency(ng)
+7 x 7 sparse Matrix of class "dgCMatrix“
+Andy Garth Bill Elena Frank Carol Dan
+. . . . 1
+1 . . . .
+Bill . . . 1 . 1 1
+Elena . . . . 1 . .
+Andy . 1
+Garth 1 .
+[1] 0
+
+Frank . . . 1 . . .
+Carol 1 .1 1 . . 1
+Dan 1 . 1 . . 1 .
+3) a network as an edge list.
+>E(ng)
+Edge sequence:
+[1] Andy -> Garth
+[2] Andy -> Dan
+[3] Garth -> Andy
+[4] Garth -> Bill
+[5] Bill -> Elena
+[6] Bill -> Carol
+[7] Bill -> Dan
+[8] Elena -> Frank
+[9] Frank -> Elena
+[10] Carol -> Andy
+[11] Carol -> Bill
+[12] Carol -> Elena
+[13] Carol -> Dan
+[14] Dan -> Andy
+[15] Dan -> Bill
+[16] Dan -> Carol
+>get.adjedgelist(ng,mode="in")
+$Andy
+[1] 3 10 14
+$Garth
+[1] 1
+$Bill
+[1] 0
+
+[1] 4 11 15
+$Elena
+[1] 5 9 12
+$Frank
+[1] 8
+$Carol
+[1] 6 16
+$Dan
+[1] 2 7 13
+[1] 0

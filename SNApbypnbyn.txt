@@ -1,0 +1,5 @@
+>library(Dominance)
+>data(data_Network_1)
+## set 1 for action you want to show
+>bytes= "00111111111000000000"
+>Sociogram(data_Network_1,bytes)

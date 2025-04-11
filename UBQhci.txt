@@ -1,0 +1,48 @@
+import java.awt.*; importjava.awt.event.*;
+public class CloseableSimpleWarning extends Frame implementsWindowListener
+{
+static private final intframe_height = 150;static private
+final intframe_width = 250;
+publicCloseableSimpleWarning()
+{
+//setBackground(Color.red);
+//setForeground(Color.black);
+setTitle("Warning");
+setSize(frame_width, frame_height);
+addWindowListener(this);
+}
+public void windowClosing (WindowEvent e)
+{
+System.exit(0);
+}
+public void windowClosed (WindowEvent e)
+{
+System.exit(0);
+}
+public void windowIconified (WindowEvent e)
+{
+System.exit(0);
+}
+public void windowDeiconified (WindowEvent e)
+{
+System.exit(0);
+}
+public void windowOpened (WindowEvent e)
+31
+{
+System.exit(0);
+}
+public void windowActivated (WindowEvent e)
+{
+System.exit(0);
+}
+public void windowDeactivated (WindowEvent e)
+{
+System.exit(0);
+}
+public static void main(String [] args)
+{
+CloseableSimpleWarning f = new CloseableSimpleWarning();
+f.show();
+}
+}

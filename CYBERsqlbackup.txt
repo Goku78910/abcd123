@@ -1,0 +1,28 @@
+import java.io.IOException;
+public class MySQLBackup {
+public static void main(String[] args) {
+String host = "localhost";
+String port = "3306";
+String databaseName = "your_database_name";
+String username = "your_username";
+String password = "your_password";
+String backupPath = "path_to_backup_directory/backup.sql";
+backupMySQLDatabase(host, port, databaseName, username, password, backupPath);
+}
+public static void backupMySQLDatabase(String host, String port, String databaseName,
+String username, String password, String backupPath) { try {
+String command = "mysqldump -h " + host + " -P " + port + " -u " + username +
+" -p" + password + " " + databaseName + " -r " + backupPath;
+ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", command);
+Process process = processBuilder.start();
+int exitCode = process.waitFor();
+if (exitCode == 0) {
+System.out.println("Backup completed successfully.");
+} else {
+System.out.println("Backup failed. Please check the error message.");
+}
+} catch (IOException | InterruptedException e) {
+e.printStackTrace();
+}
+}
+}

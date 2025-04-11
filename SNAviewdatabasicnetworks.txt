@@ -1,0 +1,33 @@
+(i) View data collection forms and/or import one-mode/ two-mode datasets.
+getwd()
+[1] "C:/Users/admin/Documents"
+>setwd("d:/sam")
+Reading data from a csv file
+>nodes<- read.csv("Dataset1-Media-Example-NODES.csv", header=T, , as.is=T)
+>head(nodes)
+Output:-
+id media media.typetype.labelaudience.size
+
+1 s01 NY Times 1 Newspaper 20
+2 s02 Washington Post 1 Newspaper 25
+3 s03 Wall Street Journal 1 Newspaper 30
+4 s04 USA Today 1 Newspaper 32
+5 s05 LA Times 1 Newspaper 20
+6 s06 New York Post 1 Newspaper 50
+>links<- read.csv(“Dataset1-Media-Example-EDGES.csv", header=T, as.is=T)
+>head(links)
+Output:-
+from to weight type
+1 s01 s02 10 hyperlink
+2 s01 s02 12 hyperlink
+3 s01 s03 22 hyperlink
+4 s01 s04 21 hyperlink
+5 s04 s11 22 mention
+6 s05 s15 21 mention
+
+(ii) Basic Networks matrices transformations
+>net<- graph.data.frame(d=links, vertices=nodes, directed=T)
+> m=as.matrix(net)
+>get.adjacency(m)
+
+>plot(net)

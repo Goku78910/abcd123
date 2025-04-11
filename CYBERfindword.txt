@@ -1,0 +1,41 @@
+import java.io.IOException; 
+import java.nio.file.Files; 
+import java.nio.file.Path; 
+import java.nio.file.Paths; 
+import java.util.Scanner;
+public class FindWordInFile {
+public static void main(String[] args) {
+// Replace "path/to/your/file.txt" with the actual path to your text file
+String filePath = "D:/eclipse-workspace/MyJavaApp/example.log";
+String targetWord = "WARNING";
+try {
+boolean wordFound = searchWordInFile(filePath, targetWord);
+if (wordFound) {
+System.out.println("The word '" + targetWord + "' was found in the file.");
+} else {
+}
+System.out.println("The word '" + targetWord + "' was not found in the file.");
+} catch (IOException e) {
+e.printStackTrace();
+}
+}
+public static boolean searchWordInFile(String filePath, String targetWord) throws IOException {
+Path path = Paths.get(filePath);
+// Check if the file exists
+if (!Files.exists(path)) {
+System.out.println("File not found: " + filePath);
+return false;
+}
+try (Scanner scanner = new Scanner(path)) {
+// Iterate through each line of the file while
+(scanner.hasNextLine()) {
+String line = scanner.nextLine();
+// Check if the target word is present in the line
+if (line.contains(targetWord)) { return true;
+// Word found
+}
+}
+}
+return false; // Word not found
+}
+}

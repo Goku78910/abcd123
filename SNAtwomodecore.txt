@@ -1,0 +1,10 @@
+File name: “Media-Example-NODES.csv” and “Media-Example-EDGES.csv”
+nodes<- read.csv("Dataset1-Media-Example-NODES.csv", header=T, as.is=T)
+links<- read.csv("Dataset1-Media-Example-EDGES.csv", header=T, as.is=T)
+net<- graph.data.frame(d=links, vertices=nodes, directed=T)
+netm<- get.adjacency(net, attr="weight", sparse=F)
+colnames(netm) <- V(net)$media
+rownames(netm) <- V(net)$media
+palf<- colorRampPalette(c("white", "black"))
+heatmap(netm[,17:1], Rowv = NA, Colv = NA, col = palf(100),
++ scale="none", margins=c(10,10) )

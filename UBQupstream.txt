@@ -1,0 +1,144 @@
+Init.php
+<?php
+$host = "localhost";
+$db_user = "root";
+$db_password = "";
+$db_name = "fcm_db";
+$con = mysqli_connect($host, $db_user, $db_password, $db_name);
+if($con)
+echo " Connection Successful ";
+else
+?>
+echo "Connection error" ;
+Fcm_insert.php
+<?php
+require "init.php";
+$fcm_token = $_POST["fcm_token"];
+$sql = "insert into fcm_info values('".$fcm_token."');"; mysqli_query($con, $sql);
+mysqli_close($con);
+?>
+MainActivity.java
+package com.example.prashant.gcmmanager;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.v7.app.AppCompatActivity; import android.os.Bundle;
+import android.view.View; import android.widget.Button;
+import com.android.volley.AuthFailureError; import com.android.volley.Request;
+import com.android.volley.Response; import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import java.util.HashMap; import java.util.Map;
+24
+public class MainActivity extends AppCompatActivity { Button button;
+String app_server_url = "http://10.0.2.2/fcmtest/fcm_insert.php";
+@Override
+protected void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+button = (Button)findViewById(R.id.button2); button.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) { SharedPreferences sharedPreferences =
+getApplicationContext().getSharedPreferences(getString(R.string.FCM_PR EF), Context.MODE_PRIVATE);
+final String token = sharedPreferences.getString(getString(R.string.FCM_TOKEN),"");
+StringRequest stringRequest = new StringRequest(Request.Method.POST, app_server_url, new
+Response.Listener<String>() {
+@Override
+public void onResponse(String response) {
+}
+}, new Response.ErrorListener() { @Override
+public void onErrorResponse(VolleyError error) {
+}
+})
+{
+AuthFailureError {
+@Override
+protected Map<String, String> getParams() throws
+Map<String,String> params = new
+HashMap<String, String>();
+params.put("fcm_token",token); return params;
+}
+};
+MySingleton.getmInstance(MainActivity.this).addtoreque(stringRequest);
+}
+});
+}
+}
+FCMInstanceIDService.java
+package com.example.prashant.gcmmanager; import android.content.Context;
+import android.content.SharedPreferences;
+25
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
+/**
+* Created by PRASHANT on 15-Nov-17.
+*/
+public class FCMInstanceIDService extends FirebaseInstanceIdService { @Override
+public void onTokenRefresh() {
+String recent_token = FirebaseInstanceId.getInstance().getToken();
+SharedPreferences sharedPreferences =
+getApplicationContext().getSharedPreferences(getString(R.string.FCM_PR EF), Context.MODE_PRIVATE);
+SharedPreferences.Editor editor= sharedPreferences.edit();
+editor.putString(getString(R.string.FCM_TOKEN),recent_token); editor.commit();
+}
+}
+FCMMessagingService.java
+package com.example.prashant.gcmmanager;
+import android.app.NotificationManager; import android.app.PendingIntent; import
+android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.NotificationCompat;
+import com.google.firebase.messaging.FirebaseMessagingService; import
+com.google.firebase.messaging.RemoteMessage;
+/**
+* Created by PRASHANT on 15-Nov-17.
+*/
+public class FCMMessagingService extends FirebaseMessagingService { @Override
+public void onMessageReceived(RemoteMessage remoteMessage) {
+String title = remoteMessage.getNotification().getTitle(); String message =
+remoteMessage.getNotification().getBody();
+Intent intent = new Intent(this,MainActivity.class); intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+PendingIntent pendingIntent =
+PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT); NotificationCompat.Builder
+notificationBuilder = new
+NotificationCompat.Builder(this); notificationBuilder.setContentTitle(title);
+notificationBuilder.setContentText(message); notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+notificationBuilder.setAutoCancel(true); notificationBuilder.setContentIntent(pendingIntent);
+NotificationManager notificationManager =
+(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE); notificationManager.notify(0,
+26
+notificationBuilder.build());
+super.onMessageReceived(remoteMessage);
+}
+}
+MySingleton.java package com.example.prashant.gcmmanager; import android.content.Context;
+import com.android.volley.Request; import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+/**
+* Created by PRASHANT on 15-Nov-17.
+*/
+public class MySingleton {
+private static MySingleton mInstance; private static Context mctx;
+private RequestQueue requestQueue; private MySingleton(Context context)
+{
+mctx = context;
+requestQueue =getRequestQueue();
+}
+private RequestQueue getRequestQueue()
+{
+if(requestQueue ==null)
+{
+requestQueue = Volley.newRequestQueue(mctx.getApplicationContext());
+}
+return requestQueue;
+}
+public static synchronized MySingleton getmInstance(Context context)
+{
+if(mInstance == null)
+{
+mInstance = new MySingleton(context);
+}
+return mInstance;
+}
+public void addtoreque(Request<?> request)
+{
+getRequestQueue().add(request);
+}
+}

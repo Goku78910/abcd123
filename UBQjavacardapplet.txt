@@ -1,0 +1,55 @@
+http://www.oracle.com/technetwork/java/embedded/javacard/downloads/javacard-sdk-2043229.html
+
+/*
+* To change this license header, choose License Headers in Project Properties.
+35
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
+package classicapplet2;
+importjavacard.framework.*;
+/**
+*
+* @author Prashant
+*/
+public class ClassicApplet2 extends Applet {
+/**
+* Installs this applet.
+*
+* @parambArray
+* the array containing installation parameters
+* @parambOffset
+* the starting offset in bArray
+* @parambLength
+* the length in bytes of the parameter data in bArray
+*/
+private byte[] received;
+private static final short MAX_LENGTH = 256;
+private static final byte[] helloFidesmo = {(byte)'H',(byte)'e',(byte)'l',(byte)'l',(byte)'o',(byte)'
+',(byte)'F',(byte)'i',(byte)'d',(byte)'e',(byte)'s',(byte)'m',(byte)'o',(byte)'!'};
+public static void install(byte[] bArray, short bOffset, byte bLength) {
+36
+new ClassicApplet2();
+}
+/**
+* Only this class's install method should create the applet object.
+*/
+protected ClassicApplet2() {
+received = new byte[MAX_LENGTH];
+register();
+}
+/**
+* Processes an incoming APDU.
+*
+* @see APDU
+* @paramapdu
+* the incoming APDU
+*/
+public void process(APDU apdu) {
+//Insert your code here byte
+buffer[] = apdu.getBuffer();
+short length = (short) helloFidesmo.length;
+Util.arrayCopyNonAtomic(helloFidesmo, (short)0, buffer, (short)0, (short)length);
+apdu.setOutgoingAndSend((short)0, length);
+}
+}

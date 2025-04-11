@@ -1,0 +1,190 @@
+UI Code :-
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayoutxmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent" android:paddingBottom="@dimen/activity_vertical_margin"
+android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+tools:context="com.example.prashant.locationmsg.MainActivity">
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:textAppearance="?android:attr/textAppearanceLarge"android:text="Large
+Text"
+android:id="@+id/textView"
+android:layout_alignParentLeft="true"
+android:layout_alignParentStart="true" />
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:textAppearance="?android:attr/textAppearanceLarge"android:text="Large
+Text"
+android:id="@+id/textView3"
+android:layout_below="@+id/textView"
+android:layout_alignParentLeft="true"
+android:layout_alignParentStart="true"
+android:layout_marginTop="96dp" />
+<Button android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Get Longitude and Latitude"
+android:id="@+id/button"
+android:layout_centerVertical="true"
+android:layout_alignParentLeft="true"
+android:layout_alignParentStart="true" />
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:textAppearance="?android:attr/textAppearanceLarge"android:text="Large
+Text"
+android:id="@+id/textView2"
+android:layout_alignParentBottom="true"
+android:layout_alignRight="@+id/button"
+android:layout_alignEnd="@+id/button" />
+</RelativeLayout>
+5
+
+Source code :-
+import android.Manifest;
+import android.content.Context;
+importandroid.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;import
+android.location.LocationManager; import
+android.net.Uri;
+import android.support.v4.app.ActivityCompat; import
+android.support.v7.app.AppCompatActivity;import
+android.os.Bundle;
+import android.util.Log; import
+android.view.View; import
+android.widget.Button;
+import android.widget.TextView;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;public class
+MainActivityextendsAppCompatActivityimplementsLocationListener {TextViewt1, t2, t3;
+Button b1;
+protected LocationManagerlocationManager;
+protected LocationListenerlocationListener;double
+lat, longg;
+privateGoogleApiClientclient;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState); setContentView(R.layout.activity_main);
+t1 = (TextView) findViewById(R.id.textView); t2 =
+(TextView) findViewById(R.id.textView3);t3 =
+(TextView) findViewById(R.id.textView2);
+b1 = (Button) findViewById(R.id.button);
+b1.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+t1.setText("Latitude = " + lat);
+t2.setText("Longitude = " + longg);
+if (lat<38 &&lat>36 &&longg<122 &&longg>118) {
+t3.setText("In-Side The Area");
+} else {
+t3.setText("Out-Side The Area");
+}
+}
+});
+locationManager=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+!= PackageManager.PERMISSION_GRANTED&&ActivityCompat.checkSelfPermission(this,
+Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+6
+return;
+}
+locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
+//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,this);
+// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+client = newGoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+}
+@Override
+public void onLocationChanged(Location location) {
+//txtLat = (TextView) findViewById(R.id.textview1);
+lat= location.getLatitude(); longg=
+location.getLongitude();Log.d("" +
+lat, "" + lat);
+Log.d("" + longg, "" + longg);
+if (lat== 38 &&longg== 118) {
+t3.setText("You Are at Perfect Place !!!!");
+} else {
+t3.setText("You are not at Perfect Place !!!!");
+}
+//t1.setText("Latitude:" + location.getLatitude() + ", Longitude:" +
+location.getLongitude());
+}
+@Override
+public void onProviderDisabled(String provider) {
+Log.d("Latitude", "disable");
+}
+@Override
+public void onProviderEnabled(String provider) {
+Log.d("Latitude", "enable");
+}
+@Override
+public void onStatusChanged(String provider, intstatus, Bundle extras) {
+Log.d("Latitude", "status");
+}
+@Override
+public void onStart() {
+super.onStart();
+.
+client.connect();
+Action viewAction = Action.newAction(
+Action.TYPE_VIEW,// TODO: choose an action type.
+"Main Page",
+Uri.parse("http://host/path"),
+// TODO: Make sure this auto-generated app URL is correct.
+7
+Uri.parse("android-app://com.example.prashant.locationmsg/http/host/path")
+);
+AppIndex.AppIndexApi.start(client, viewAction);
+}
+@Override
+public void onStop() {
+super.onStop();
+// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+Action viewAction = Action.newAction( Action.TYPE_VIEW,
+// TODO: choose an action type.
+"Main Page", // TODO: Define a title for the content shown.
+// TODO: If you have web page content that matches this app activity's
+content,
+// make sure this auto-generated web page URL is correct.
+// Otherwise, set the URL to null.
+Uri.parse("http://host/path"),
+// TODO: Make sure this auto-generated app URL is correct.
+Uri.parse("android-app://com.example.prashant.locationmsg/http/host/path")
+);
+AppIndex.AppIndexApi.end(client, viewAction);
+client.disconnect();
+}
+}
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.example.prashant.locationmsg">
+<uses-permissionandroid:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permissionandroid:name="android.permission.INTERNET" />
+<application android:allowBackup="true"
+android:icon="@mipmap/ic_launcher"
+android:label="@string/app_name"
+android:supportsRtl="true"
+android:theme="@style/AppTheme">
+<activity android:name=".MainActivity">
+<intent-filter>
+<actionandroid:name="android.intent.action.MAIN" />
+<category android:name="android.intent.category.LAUNCHER" />
+</intent-filter>
+</activity>
+<!-- ATTENTION: This was auto-generated to add Google Play services to your projectfor
+App Indexing. See https://g.co/AppIndexing/AndroidStudio for more information. -
+->
+<meta-data
+android:name="com.google.android.gms.version"
+android:value="@integer/google_play_services_version" />
+</application>
+</manifest>

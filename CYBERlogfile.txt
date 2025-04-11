@@ -1,0 +1,26 @@
+import java.io.IOException; import
+java.util.logging.FileHandler; import
+java.util.logging.Level; import
+java.util.logging.Logger; import
+java.util.logging.SimpleFormatter;
+public class LogFileExample {
+public static void main(String[] args) {
+Logger logger = Logger.getLogger(LogFileExample.class.getName());
+try {
+// Create a file handler to write log messages to a file
+FileHandler fileHandler = new FileHandler("example.log");
+// Create a simple text formatter for the log records
+SimpleFormatter simpleFormatter = new SimpleFormatter();
+fileHandler.setFormatter(simpleFormatter);
+// Add the file handler to the logger
+logger.addHandler(fileHandler);
+// Set the logging level (FINEST, FINER, FINE,
+INFO, WARNING, SEVERE)
+logger.setLevel(Level.INFO);
+// Log some sample messages logger.info("This is an
+informational message."); logger.warning("This is a warning
+message."); logger.severe("This is a severe error message.");
+} catch (IOException e) { e.printStackTrace();
+}
+}
+}

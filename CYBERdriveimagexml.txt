@@ -1,0 +1,64 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+public class DriveImageXMLExample {
+public static void main(String[] args) {
+// Replace these values with your actual DriveImage XML installation path and desired image file
+path
+String driveImageXMLPath = "C:\\Program Files\\Runtime Software\\DriveImage
+XML\\dixml.exe";
+String sourceDrive = "C:"; // Replace with the drive you want to image
+String destinationImagePath = "D:\\backup_image.xml"; // Replace with the desired image file
+path
+// Create a disk image createDiskImage(driveImageXMLPath,
+sourceDrive, destinationImagePath);
+// Restore from the disk image (optional)
+// restoreFromDiskImage(driveImageXMLPath, destinationImagePath, "E:"); // Replace with the
+destination drive
+}
+public static void createDiskImage(String driveImageXMLPath, String sourceDrive, String
+destinationImagePath) {
+try {
+String command = driveImageXMLPath + " /b /v /c /s" + sourceDrive + " /f" +
+destinationImagePath;
+ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", command);
+Process process = processBuilder.start();
+int exitCode = process.waitFor();
+if (exitCode == 0) {
+System.out.println("Disk image created successfully.");
+} else {
+System.out.println("Disk image creation failed. Please check the error message.");
+printErrorStream(process);
+}
+} catch (IOException | InterruptedException e) {
+e.printStackTrace();
+}
+}
+public static void restoreFromDiskImage(String driveImageXMLPath, String sourceImagePath,
+String destinationDrive) {
+try {
+String command = driveImageXMLPath + " /r /f" + sourceImagePath + " /s" + destinationDrive;
+ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", command);
+Process process = processBuilder.start();
+int exitCode = process.waitFor();
+if (exitCode == 0) {
+System.out.println("Restoration from disk image completed successfully.");
+} else {
+System.out.println("Restoration from disk image failed. Please check the error message.");
+printErrorStream(process);
+}
+} catch (IOException | InterruptedException e) {
+e.printStackTrace();
+}
+}
+private static void printErrorStream(Process process) throws IOException {
+try (BufferedReader reader = new BufferedReader(new
+InputStreamReader(process.getErrorStream()))) {
+String line;
+System.out.println("Error message:");
+while ((line = reader.readLine()) != null) {
+System.out.println(line);
+}
+}
+}
+}

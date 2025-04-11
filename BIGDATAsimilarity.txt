@@ -1,0 +1,48 @@
+install.packages("tm")
+require("tm")
+install.packages("ggplot2")
+install.packages("textreuse")
+install.packages("devtools")
+Source Code 1:-
+my.corpus <- Corpus(DirSource("c:/msc/r-corpus"))
+my.corpus <- tm_map(my.corpus, removeWords, stopwords("english"))
+my.tdm <- TermDocumentMatrix(my.corpus)
+#inspect(my.tdm)
+my.dtm <- DocumentTermMatrix(my.corpus, control = list(weighting =
+weightTfIdf, stopwords = TRUE))
+#inspect(my.dtm)
+my.df <- as.data.frame(inspect(my.tdm))
+my.df.scale <- scale(my.df)
+d <- dist(my.df.scale,method="euclidean") fit
+<- hclust(d, method="ward") plot(fit)
+
+> barplot(as.matrix(my.tdm))
+> my.df.scale <- scale(my.df)
+> d <- dist(my.df.scale,method="euclidean")
+> fit <- hclust(d, method="ward")
+The "ward" method has been renamed to "ward.D"; note new "ward.D2" >
+plot(fit)
+
+
+SOURCE CODE 2
+my.corpus <- Corpus(DirSource("c:/msc/r-corpus"))
+my.corpus <- tm_map(my.corpus, removeWords, stopwords("english"))
+my.tdm <- TermDocumentMatrix(my.corpus)
+inspect(my.tdm)
+my.df <- as.data.frame(inspect(my.tdm))
+barplot(as.matrix(my.tdm))
+#barplot(as.matrix(my.tdm),col = color)
+barplot(as.matrix(my.tdm),col = color)
+
+sSourcecode 3
+minhash <- minhash_generator(200, seed = 235)
+ats <- TextReuseCorpus(dir = "c:/msc/r-corpus", tokenizer = tokenize_ngrams, n = 5,
+minhash_func = minhash)
+buckets <- lsh(ats, bands = 50, progress = interactive())
+candidates <- lsh_candidates(buckets)
+scores <- lsh_compare(candidates, ats, jaccard_similarity, progress = FALSE)
+scores
+color <- c("red","green","blue","orange","yellow","pink")
+barplot(as.matrix(scores),col = color)
+
+
